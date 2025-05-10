@@ -18,4 +18,5 @@ jobs:
 
       # Construire l'image Docker pour le frontend
       - name: Build frontend Docker image
-        run: docker build -f Frontend/Dockerfile -t frontend-image .
+        run: docker build -f Frontend/Dockerfile -t frontend-image Frontend
+
