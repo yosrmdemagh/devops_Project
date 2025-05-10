@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code_
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
+      - name: Set up Docker Buildx_
         uses: docker/setup-buildx-action@v1
 
       - name: Build frontend test image (with node)

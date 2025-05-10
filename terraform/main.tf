@@ -4,8 +4,7 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "~> 3.0"
     }
-  }
-}
+  }}
 
 provider "docker" {}
 
