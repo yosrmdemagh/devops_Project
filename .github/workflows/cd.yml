@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      # Build and tag frontend image
+      - name: Build frontend image
+        run: docker build -f Frontend/Dockerfile --target build -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend-build Frontend
+
+      - name: Push frontend image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend-build
+
+      # Build and tag backend image
+      - name: Build backend image
+        run: docker build -f Backend/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/backend-image Backend
+
+      - name: Push backend image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend-image
+
+      # Run frontend tests
+      - name: Run frontend tests with vitest
+        run: docker run --rm ${{ secrets.DOCKERHUB_USERNAME }}/frontend-build npm run test
+
+      # Run backend tests
+      - name: Run backend tests with jest
+        run: docker run --rm ${{ secrets.DOCKERHUB_USERNAME }}/backend-image npm run test
+
+      # Cleanup
+      - name: Clean up
+        run: docker system prune -f
