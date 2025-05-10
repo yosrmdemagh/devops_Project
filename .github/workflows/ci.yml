@@ -10,18 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code_
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
+      - name: Set up Docker Buildx_
         uses: docker/setup-buildx-action@v1
 
-      - name: Build frontend test image (with node)
+      - name: Build frontend test image (with node)_
         run: docker build -f Frontend/Dockerfile --target build -t frontend-build Frontend
 
 
       # Construire l'image Docker pour le backend
-      - name: Build backend Docker image
+      - name: Build backend Docker image_
         run: docker build -f Backend/Dockerfile -t backend-image Backend
 
       # Exécuter les tests frontend (vite avec vitest)
@@ -29,7 +29,7 @@ jobs:
         run: docker run --rm frontend-build npm run test
 
       # Exécuter les tests backend (express avec jest)
-      - name: Run backend tests with jest
+      - name: Run backend tests with jest_
         run: |
           docker run --rm backend-image npm run test # Assurez-vous que la commande `npm run test` est définie dans ton backend Dockerfile
 
