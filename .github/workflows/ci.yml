@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # Construire l'image Docker pour le frontend
+      - name: Build frontend Docker image
+        run: docker build -f Frontend/Dockerfile -t frontend-image .
+
+      # Construire l'image Docker pour le backend
+      - name: Build backend Docker image
+        run: docker build -f Backend/Dockerfile -t backend-image .
+
+      # Exécuter les tests frontend (vite avec vitest)
+      - name: Run frontend tests with vitest
+        run: |
+          docker run --rm frontend-image npm run test # Assurez-vous que la commande `npm run test` est définie dans ton frontend Dockerfile
+
+      # Exécuter les tests backend (express avec jest)
+      - name: Run backend tests with jest
+        run: |
+          docker run --rm backend-image npm run test # Assurez-vous que la commande `npm run test` est définie dans ton backend Dockerfile
+
+      # Nettoyage des images Docker
+      - name: Clean up
+        run: |
+          docker system prune -f
