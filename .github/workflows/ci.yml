@@ -16,15 +16,17 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      # Construire l'image Docker pour le frontend
-      - name: Build frontend Docker image
-        run: docker build -f Frontend/Dockerfile -t frontend-image Frontend
+      - name: Build frontend test image (with node)
+        run: docker build -f Frontend/Dockerfile --target build -t frontend-build Frontend
+
 
       # Construire l'image Docker pour le backend
       - name: Build backend Docker image
         run: docker build -f Backend/Dockerfile -t backend-image Backend
 
       # Exécuter les tests frontend (vite avec vitest)
+      - name: Run frontend tests with vitest
+        run: docker run --rm frontend-build npm run test
 
       # Exécuter les tests backend (express avec jest)
       - name: Run backend tests with jest
